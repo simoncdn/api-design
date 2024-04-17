@@ -1,15 +1,7 @@
-import http from "http";
+import app from "./server.js";
 
-const PORT = process.env.PORT || 3400;
+const port = process.env.PORT || 3400;
 
-async function autoRunFunction(req, res) {
-  if (req.method === "GET" && req.url === "/") {
-    res.statusCode = 200;
-    res.message = "Hello World!";
-    res.end("Hello World!");
-  }
-}
-const server = http.createServer(autoRunFunction);
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}...`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}...`);
 });
