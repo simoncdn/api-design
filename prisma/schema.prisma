@@ -18,16 +18,17 @@ model User {
   createdAt DateTime  @default(now())
   username  String    @unique
   password  String
-  product   Product[]
+  products  Product[]
 }
 
 model Product {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   name      String   @db.VarChar(255)
-  updates   Update[]
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  updates   Update[]
+	@@unique([id,userId])
 }
 
 enum UPDATE_STATUS {
