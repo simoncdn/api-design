@@ -1,7 +1,7 @@
 
 import { Router } from 'express';
-import { body } from 'express-validator';
-import { handleInputErrors } from '../modules/middleware';
+import { validate } from '../modules/middleware';
+import { productSchema } from '../schemas/product';
 
 const productRouter = Router();
 
@@ -13,7 +13,7 @@ productRouter.post("/", (req, res) => { });
 
 productRouter.get("/:id", (req, res) => { });
 
-productRouter.put("/:id", body('name').isString(), handleInputErrors, (req, res) => {
+productRouter.put("/:id", validate(productSchema), (req, res) => {
 	res.status(200);
 	res.json({ message: req.body });
 });
