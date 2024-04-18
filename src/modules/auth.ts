@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 export interface CustomRequest extends Request {
 	userId: string | JwtPayload;
@@ -10,6 +11,14 @@ const privateKey = process.env.JWT_SECRET as string;
 const handleError = (res: Response, message: string) => {
 	res.status(401);
 	res.json({ message });
+}
+
+export const comparePasswords = (password: string, hashedPassword: string): Promise<boolean> => {
+	return bcrypt.compare(password, hashedPassword);
+}
+
+export const hashPassword = (password: string): Promise<string> => {
+	return bcrypt.hash(password, 10);
 }
 
 export const createJWT = (userId: string): string => {
