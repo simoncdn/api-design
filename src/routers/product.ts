@@ -2,13 +2,11 @@
 import { Router } from 'express';
 import { validate } from '../modules/middleware';
 import { productSchema } from '../schemas/product';
+import { getAllProducts } from '../handlers/product';
 
 const productRouter = Router();
 
-productRouter.get("/", (req, res) => {
-	res.status(200);
-	res.json({ message: "Hello world!" });
-});
+productRouter.get("/", getAllProducts);
 productRouter.post("/", (req, res) => { });
 
 productRouter.get("/:id", (req, res) => { });

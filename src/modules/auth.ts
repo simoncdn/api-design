@@ -1,14 +1,11 @@
 import type { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { handleError } from '../../utils/helper';
 import dotenv from 'dotenv';
+import type { UserToken } from '../../types/express';
 
 dotenv.config();
-
-export interface CustomRequest extends Request {
-	userId: string | JwtPayload;
-}
 
 const privateKey = process.env.JWT_SECRET as string;
 
@@ -25,7 +22,7 @@ export const createJWT = (userId: string): string => {
 	return token;
 };
 
-export const protect = (req: Request, res: Response, next: NextFunction) => {
+export const protect = (req: Request, res: Response, next: NextFunction): void => {
 	const bearer = req.headers.authorization;
 
 	if (!bearer) {
@@ -39,8 +36,8 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 	}
 
 	try {
-		const user = jwt.verify(token, privateKey);
-		(req as CustomRequest).userId = user;
+		const userToken = jwt.verify(token, privateKey);
+		req.user = userToken as UserToken;
 		next();
 	} catch (err) {
 		return handleError(res, 401, 'not valid token');
