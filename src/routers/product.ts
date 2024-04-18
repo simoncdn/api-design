@@ -2,20 +2,14 @@
 import { Router } from 'express';
 import { validate } from '../modules/middleware';
 import { productSchema } from '../schemas/product';
-import { getAllProducts } from '../handlers/product';
+import { createProduct, deleteProduct, getAllProducts, getProduct, updateProduct } from '../handlers/product';
 
 const productRouter = Router();
 
 productRouter.get("/", getAllProducts);
-productRouter.post("/", (req, res) => { });
-
-productRouter.get("/:id", (req, res) => { });
-
-productRouter.put("/:id", validate(productSchema), (req, res) => {
-	res.status(200);
-	res.json({ message: req.body });
-});
-
-productRouter.delete("/:id", (req, res) => { });
+productRouter.post("/", validate(productSchema), createProduct);
+productRouter.get("/:id", getProduct);
+productRouter.put("/:id", validate(productSchema), updateProduct);
+productRouter.delete("/:id", deleteProduct);
 
 export default productRouter;

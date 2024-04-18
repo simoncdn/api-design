@@ -17,8 +17,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
 	const product = await prisma.product.findUnique({
 		where: {
-			id: req.params.productId,
-			userId: req.user.id,
+			id_userId: {
+				id: req.params.id,
+				userId: req.user.id,
+			},
 		}
 	});
 
@@ -40,7 +42,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 	const product = await prisma.product.update({
 		where: {
 			id_userId: {
-				id: req.params.productId,
+				id: req.params.id,
 				userId: req.user.id,
 			},
 		},
@@ -56,7 +58,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 	const product = await prisma.product.delete({
 		where: {
 			id_userId: {
-				id: req.params.productId,
+				id: req.params.id,
 				userId: req.user.id,
 			},
 		},

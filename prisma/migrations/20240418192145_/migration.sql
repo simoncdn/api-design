@@ -25,7 +25,7 @@ CREATE TABLE "Product" (
 CREATE TABLE "Update" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3),
     "title" TEXT NOT NULL,
     "body" TEXT NOT NULL,
     "status" "UPDATE_STATUS" NOT NULL DEFAULT 'IN_PROGRESS',
@@ -50,6 +50,9 @@ CREATE TABLE "UpdatePoint" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Product_id_userId_key" ON "Product"("id", "userId");
 
 -- AddForeignKey
 ALTER TABLE "Product" ADD CONSTRAINT "Product_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
