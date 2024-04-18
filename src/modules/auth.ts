@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import { handleError } from '../../utils/helper';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export interface CustomRequest extends Request {
 	userId: string | JwtPayload;
@@ -8,13 +12,8 @@ export interface CustomRequest extends Request {
 
 const privateKey = process.env.JWT_SECRET as string;
 
-const handleError = (res: Response, message: string) => {
-	res.status(401);
-	res.json({ message });
-}
-
-export const comparePasswords = (password: string, hashedPassword: string): Promise<boolean> => {
-	return bcrypt.compare(password, hashedPassword);
+export const comparePasswords = (password: string, hash: string) => {
+	return bcrypt.compare(password, hash);
 }
 
 export const hashPassword = (password: string): Promise<string> => {
@@ -30,13 +29,13 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 	const bearer = req.headers.authorization;
 
 	if (!bearer) {
-		return handleError(res, 'not authorized');
+		return handleError(res, 401, 'not authorized');
 	}
 
 	const [, token] = bearer.split(' ');
 
 	if (!token) {
-		return handleError(res, 'not valid token');
+		return handleError(res, 401, 'not valid token');
 	}
 
 	try {
@@ -44,6 +43,6 @@ export const protect = (req: Request, res: Response, next: NextFunction) => {
 		(req as CustomRequest).userId = user;
 		next();
 	} catch (err) {
-		return handleError(res, 'not valid token');
+		return handleError(res, 401, 'not valid token');
 	}
 }
